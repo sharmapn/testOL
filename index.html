@@ -19,7 +19,7 @@
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 		<link rel="stylesheet" href="assets/css/main.css" />
-		<link rel="stylesheet" href="assets/css/ol.css" />
+		<!-- <link rel="stylesheet" href="assets/css/ol.css" /> -->
 		<link rel="stylesheet" href="assets/css/gifplayer.css" />
 		<link rel="stylesheet" href="assets/css/font-awesome.min.css"/>
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
@@ -30,7 +30,7 @@
 		<script src="assets/js/turf.min.js"></script>
 		<script src="assets/js/shpwrite.js"></script>
 		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/ol.js"></script>
+		<!-- <script src="assets/js/ol.js"></script> -->
 		<script src="assets/js/shp.min.js"></script>
 		<script src="assets/js/jszip.min.js"></script>
 		<script src="assets/js/FileSaver.js"></script>
@@ -38,6 +38,12 @@
 		<script src="assets/js/proj4.js"></script>
 		<script src="assets/js/jquery.gifplayer.js"></script>
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@main/dist/en/v7.1.0/ol/ol.css" /> 
+
+  		<script src="https://unpkg.com/d3-fetch@2.0.0"></script>
+  		<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@main/dist/en/v7.1.0/ol/dist/ol.js"></script> 
+  		<script src="https://unpkg.com/h3-js@3.7.0"></script>
 
 		<!-- Matomo -->
 		<script>
@@ -55,6 +61,65 @@
 		</script>
 		<noscript><p><img src="//data.swanlund.space/matomo.php?idsite=2&amp;rec=1" style="border:0;" alt="" /></p></noscript>
 		<!-- End Matomo Code -->
+
+
+		<script>
+			function displayMap(){
+				var x = document.getElementById("mapContainer");
+				if (x.style.display === "none") {
+					x.style.display = "block";
+					map.updateSize();
+				} else {
+					x.style.display = "none";
+				}
+			}
+    	</script>
+
+		 <style>
+			body {
+			padding: 15px;
+			}
+
+			@media (max-width: 800px) {
+			#container {
+				height: 650px;
+				grid-template-columns: none !important;
+				grid-template-rows: auto 1fr;
+			}
+
+			#mapContainer {
+				height: auto !important;
+			}
+			}
+
+			#container {
+			display: grid;
+			grid-template-columns: 370px 1fr;
+			}
+
+			#mapContainer {
+			height: 600px;
+			}
+
+			#controlContainer {
+			margin-top: 10px;
+			display: grid;
+			grid-column-gap: 10px;
+			align-self: center;
+			}
+
+			#controlContainer label {
+			grid-column: 1 / span 1;
+			text-align: end;
+			}
+
+			#controlContainer input {
+			grid-column: 2 / span 1;
+			width: 150px;
+			}
+		</style>	
+
+
 	</head>
 	<body>
 
@@ -86,79 +151,10 @@
 			<div id="main">
 
 				<!-- About -->
-				<article id="about">
-					<h2>What is MaskMy.XYZ?</h2>
-					<p>MaskMy.XYZ helps users perform a time-tested geographic mask from the scientific literature, known as donut masking. Instead of being a toolbox for a specific (potentially expensive) GIS software suite, MaskMy.XYZ uses popular open source JavaScript libraries to mask data without ever requiring users to install or download any software. So whether you're a GIS expert who can't be bothered to script this method yourself, or a GIS newbie who knows you need to mask your data but aren't quite sure how, MaskMy.XYZ makes your life easier and brings previously cumbersome methods into reach.</p>
-
-					<h2>Should I trust this site with my data?</h2>
-					<p>When you load your files, no data leaves your browser, and all processing is done client-side using JavaScript. In fact, the application has been specifically designed so that it can be run offline for the utmost confidentiality. That means you don't need to trust this site: you can just load the page, unplug your internet, and do your work with the guarantee that your data isn't being stolen.</p>
-
-					<h2> What about the basemap? </h2>
-					<p>When MaskMy.XYZ is used while connected to the internet, it will load a basemap to help visualize your data. This does not put your data at risk in any realistic scenario. The basemap loads areas that are several kilometers in size, and does not send the points themselves to the basemap provider. If you are still concerned you can always run the tool offline!</p>
-
-					<h2>Is it foolproof?</h2>
-					<p>No, and neither is any other privacy-related tool. MaskMy.XYZ drastically simplifies the process of geographic masking while also providing general advice, but that doesn't guarantee that your data can't be re-identified. It is up to you to ensure that you're using this tool appropriately and that you understand its limitations! For more information, check out the <a href="#disclaimer">disclaimer</a>.</p>
-
-					<h2>Credits</h2>
-					<p>MaskMy.XYZ uses and is grateful for a number of open source software projects, including HTML5Up, TurfJS, Shapefile-JS, Shp-Write, JQuery, FileSaver.js, JSZip, Proj4JS, and OpenLayers. Their respective licenses can be found <a href="LICENSE.txt">here</a></p>
-				</article>
+				
 
 				<!-- Guided Setup -->
-				<article id="maskingguide">
-					<h2>What is geographic masking?</h2>
-					<p>Researchers often like publishing maps, but doing so can be dangerous when the data being mapped is sensitive or private. Home addresses of patients, the position of archeological sites, and the location of endangered species are just three examples among many where a map can be hugely helpful for readers, but may also expose people's sensitive health data, attract unwanted tourists to archeological sites, or direct hunters towards those already-endangered animals. </p>
-					<p>Geographic masks are a set of techniques that alter the location of points in a map to protect privacy without overly affecting any spatial patterns. In other words, <i>geographic masks allow researchers to publish useful maps of approximate locations, without exposing sensitive data or violating anyone's privacy</i>. Of course, this is a trade-off: with more masking comes more privacy, but this privacy comes as the cost of <i>information loss</i>. If we apply too much masking to our data, the end result may not resemble the original data whatsoever. While the balance between privacy and information loss can be tricky, its best to air on the side of privacy.</p>
-
-					<h2>What geographic mask does MaskMy.XYZ use?</h2>
-					<p>MaskMy.XYZ performs donut masking, which is a funny term for a simple concept: moving each point randomly between a minimum and maximum distance, as pictured below. Typically donut masking is performed by creating two buffers (circles), and then randomly generating a new point between those two buffers. MaskMy.XYZ does it a little differently: it chooses a random distance between the minimum and maximum values that you set, and then finds a random angle between 0 and 360 degrees, before finally relocating the point based on the combintion of the two. The end result is essentially the same, but is much easier for a computer to calculate!</p>
-					<img src="images/donutmasking.PNG" width="100%"><p></p>
-
-					<h2>Can I use this to mask trajectory data, like GPS tracks?</h2>
-					<p>Technically yes, but there are a lot of caveats, and if you have to ask then you probably shouldn't! Trajectory data can often be very hard to effectively anonymize, especially if you want readers or users of your data to be able to distinguish between each trajectory (i.e. see who went where). If you're only publishing a static map of <i>all</i> the points in your dataset, and provide no indication that any given point belongs to a particular person, then it <i>may</i> be safe to use MaskMy.XYZ in this scenario, but be cautious. For more information, give <a href='http://dx.doi.org/10.1080/13658816.2015.1101767'>this paper</a> a read.</p>
-
-					<h2>How do I use the masking tool?</h2>
-					<p>Watch this GIF to learn how to mask your data, from start to finish!</p>
-					<img class="gifplayer" src="images/instructions.png" style="box-shadow: 2px 2px 2px 2px #ccc;" width="100%">
-					<script>$('.gifplayer').gifplayer();</script>
-					<p></p>
-
-					<h2>How do I load data?</h2>
-					<p>First, make sure the data you want to mask is in a shapefile format. Then, select all the individual files that form your shapefile (such as the .shp, .dbf, .prj, etc), and add them to a zip file. MaskMy.XYZ can only load zipped shapefiles. Once you have the zip file, just click the 'Choose File' button in the Masking Tool and select the zipped shapefile from your file system, as shown in the above video.</p>
-
-					<h2>What are 'boundary polygons' for?</h2>
-					<p>Sometimes when we mask data, we want to make sure that when each point moves it doesn't move out of a particular area. For instance, when masking a home location, we might want to ensure that when  the point is masked (i.e. when it is relocated), that it doesn't leave the census tract it is in, so that the masked location keeps the same census variables as the original location. To do this in MaskMy.XYZ, just load the boundary polygons that you want to keep the points inside of, and MaskMy.XYZ will do the rest!</p>
-
-					<h2>What masking distances should I use?</h2>
-					<p>That depends on a wide variety of factors, including population density, the sensitivity of the data being masked, and the 'information loss' that you're comfortable with. In other words, it's entirely up to you and your knowledge of the data, but here are some guiding considerations:</p>
-
-					<p><strong>Population Density: </strong>the underlying population density strongly effects how much masking is required to adequately protect privacy. For instance, masking a point in an urban core by 200 meters may provide a very strong degree of privacy if a thousand people live within those 200 meters, but moving a point in a rural town may not provide any privacy at all if nobody else lives within 200 meters. Often data-sets will span a combination of urban and rural areas, complicating things even further. Some geographic masks automatically take population density into account, however, for various reasons MaskMy.XYZ does not. Therefore, in deciding what distance to use when masking, it is critical that you reflect carefully on the underlying population density of your data. </p>
-					<p><strong>Data Sensitivity: </strong>not all sensitive data is equally sensitive. For example, a database containing the home locations of patients suffering from the flu is far less sensitive than if the patients suffered from HIV. Obviously, far greater masking distances should be used in the latter scenario. While it is not always so clear-cut, decisions on an appropriate masking distance should take into account the sensitivity of the data being masked. Ask yourself, what are the stakes if someone reverse engineers the mask and re-identifies the people (or places) in your dataset? </p>
-					<p><strong>Information Loss: </strong>increasing the distance used when masking data will provide more privacy, but it comes at the cost of information loss. In other words, the more we mask data, the less the masked data will resemble the original data. This can be critical if, for instance, you are trying to show clusters of a given disease but mask the data too much, making those clusters no longer detectable to readers. Ideally, a balance can be struck where a sufficient level of privacy is achieved with only a small amount of information loss. In cases where the level of privacy required necessarily produces too much information loss for the map to be useful, you may need to reconsider whether you should include a map at all! </p>
-
-					<h2>What is the privacy rating?</h2>
-					<p>The privacy rating is a rough measure of the likelihood that your data might be re-identified by someone. It is based on Spruill's measure, but we invert it to make it a privacy rating rather than a disclosure risk rating. Formally, Spruill's measure is defined by Armstrong et al (1999) as follows:</p>
-					<p style="margin-left: 1rem;"><i>"For each record in the masked file M, compute the distance between its geographic co-ordinates and those of each record in the original file X. Spruill's measure, S, is the proportion of records in M that are closer to their 'parent' records than to any other record in X. A mask for which a large number of records are closest to their parent records has a high disclosure risk"</i></p>
-
-					<h2>What is the mean center displacement distance?</h2>
-					<p>This refers to how far the 'mean center' of your masked points have moved due to masking. 'Mean center' is essentially just the central point in a group of points. For instance, if you had a cluster of ten points, you might calculate the average X coordinate of all the points, and the average Y coordinate of all the points. These two averages represent the mean center. Like the privacy rating, it too is a crude measure, but essentially the more the mean center has moved, the more information loss your data has suffered.</p>
-
-					<h2>What are cluster metrics?</h2>
-					<p>Cluster metrics use an algorithm known as DBSCAN to try and find different pockets of points, or clusters, in your sensitive and masked data. Ideally, no clusters are added due to masking, nor are any lost. With cluster metrics enabled, you will be provided both a count of how many clusters there are before and after masking, as well as a visual representation of where those clusters are on the map, as points that are part of a cluster appear as bold on the map. However, DBSCAN is both complicated and <i>very</i> sensitive to the maximum cluster distance value you select, so don't use this to try and detect real, meaningful clusters in your data. Instead, play around with the value, see how it affects cluster detection until you find a value that you think looks reasonable, and use it for <i>exploring</i> how masking changes the distribution of your data and some of the <i>potential</i> clusters within it. This really is an exploratory tool, and is not meant for statistical purposes.</p>
-
-					<h2>Should I publish my masking distances?</h2>
-					<p>Nope! It's best not to disclose what masking distances you chose, as it could weaken the mask and make it easier for an adversary to re-identify the points.</p>
-
-					<h2>When I download data, it goes to 'about:blocked'</h2>
-					<p>This is a known issue with Chrome-based browsers and usually happens with larger data sets. If you're running into this problem, try using Firefox.</p>
-
-					<h2>Other resources</h2>
-					<p>Unfortunately, most of the resources required to learn about geographic masking are in the academic literature. For an excellent review article, read:</p>
-					<ul>
-						<li>Zandbergen, P. (2014). Ensuring Confidentiality of Geocoded Health Data: Assessing Geographic Masking Strategies for Individual-Level Data. Advances in Medicine. <a href="https://doi.org/10.1155/2014/567049">https://doi.org/10.1155/2014/567049</a></li>
-					</ul>
-					<p>A more comprehensive reading list can be found <a href="maskingBibliography.html">here</a>. Included in that list are several more powerful masks than MaskMy.XYZ provides.</p>
-
-				</article>
+				
 
 				<!-- Donut Masking -->
 				<article id="dm">
@@ -232,6 +228,70 @@
 					<div id="citationLoader"><a href="#citation"><button style="margin: 1rem 0 0 0; width: 100%;" id="downloadMasked">Download Masked Data</button></a></div>
 
 					<button style="margin: 0.5rem 0 .5rem 0; width: 100%;" id="clear">Clear All</button>
+
+					<h1>Neighborhood Suitability Analysis in Utah</h1>
+						<p>
+							Suitability analysis allows a user to explore the appropriateness of an area based on a specific set of criteria.
+							This application allows the user to select the individual criteria on which to assess and assign a weight to that
+							criteria by moving the respective slider bar. When you move a slider bar to the right, the areas on the map that are
+							higher in this criteria will be highlighted (i.e., darker hexagons indicate areas of higher suitability).
+							Conversely, this map can also be used to explore areas that are less suitable.
+						</p>
+						<div id="container">
+							<div id="controlContainer">
+							<label for="childcareWeight">Childcare</label>
+							<input id="childcareWeight" type="range" min="0" max="1" step="any" value="0" />
+							<label for="hospitalWeight">Hospitals</label>
+							<input id="hospitalWeight" type="range" min="0" max="1" step="any" value="0" />
+							<label for="groceryWeight">Grocery and Food</label>
+							<input id="groceryWeight" type="range" min="0" max="1" step="any" value="0" />
+							<label for="libraryWeight">Public Libraries</label>
+							<input id="libraryWeight" type="range" min="0" max="1" step="any" value="0" />
+							<label for="charterschoolsWeight">Charter Schools</label>
+							<input id="charterschoolsWeight" type="range" min="0" max="1" step="any" value="0" />
+							<label for="higheredWeight">Colleges and Universities</label>
+							<input id="higheredWeight" type="range" min="0" max="1" step="any" value="0" />
+							<label for="utarailstationlayerWeight">UTA Light Rail Stations</label>
+							<input id="utarailstationlayerWeight" type="range" min="0" max="1" step="any" value="0" />
+							<label for="utabusstopslayerWeight">UTA Bus Stops</label>
+							<input id="utabusstopslayerWeight" type="range" min="0" max="1" step="any" value="0" />
+							<label for="commcentersWeight">Community Centers</label>
+							<input id="commcentersWeight" type="range" min="0" max="1" step="any" value="0" />
+							<label for="localparksWeight">Local Parks</label>
+							<input id="localparksWeight" type="range" min="0" max="1" step="any" value="0" />
+							</div>
+							<div id="mapContainer" style="display: none;"></div>
+						</div>
+						<input id="clickMe" type="button" value="Show Map" onclick="displayMap();" />
+
+						<p>This map was created using <a href="https://wiki.openstreetmap.org/wiki/API" rel="nofollow">OSM</a> and the <a
+							href="https://github.com/uber/h3">Uber H3 Hexagonal Geospatial Indexing System</a>, <a
+							href="https://h3geo.org/docs/core-library/restable" rel="nofollow">resolution 8</a>.</p>
+
+						<p>
+							<strong>Data Sources</strong><br>
+							Childcare - <a href="https://data.wfrc.org/datasets/utah-child-care-centers" rel="nofollow">WFRC Child Care Centers
+							GIS layer</a><br>
+							Hospitals - <a href="https://data.wfrc.org/datasets/utah-hospitals" rel="nofollow">WFRC Hospitals GIS layer</a><br>
+							Grocery and Food - <a href="https://data.wfrc.org/datasets/utah-grocery-and-food-stores-uda" rel="nofollow">WFRC
+							Grocery and Food Stores GIS layer</a><br>
+							Public Libraries - <a href="https://opendata.gis.utah.gov/datasets/utah-public-libraries/" rel="nofollow">UGRC
+							Public Libraries GIS layer</a><br>
+							Charter Schools - <a href="https://opendata.gis.utah.gov/datasets/utah-schools-prek-to-12" rel="nofollow">UGRC
+							Schools GIS layer</a><br>
+							Colleges and Universities - <a href="https://opendata.gis.utah.gov/datasets/utah-schools-higher-education/"
+							rel="nofollow">UGRC Colleges and Universities GIS layer</a><br>
+							UTA Light Rail Stations - <a href="https://opendata.gis.utah.gov/datasets/utah-uta-light-rail-stations/"
+							rel="nofollow">UTA Light Rail Stations GIS layer</a><br>
+							UTA Bus Stops - <a href="https://opendata.gis.utah.gov/datasets/utah-uta-bus-stops-wasatch-front/"
+							rel="nofollow">UTA Bus Stops GIS layer</a><br>
+							Community Centers - <a href="https://data.wfrc.org/datasets/community-centers/" rel="nofollow">WFRC Community
+							Centers GIS layer</a><br>
+							Local Parks - <a href="https://opendata.gis.utah.gov/datasets/utah-parks-local" rel="nofollow">UGRC Local Parks GIS
+							layer</a>
+						</p>
+
+						Built by <a href="https://gis.utah.gov">UGRC</a>
 
 					<script>
 						//Set a bunch of variables based on user input
@@ -357,6 +417,272 @@
 		<!-- Tags for injecting geoJSON data -->
 		<script id="sensitiveTag"></script>
 		<script id="boundaryTag"></script>
+
+		<script type="module">
+		import geojson2h3 from "https://cdn.skypack.dev/geojson2h3@1.0.1";
+
+		// Config
+		const config = {
+			lng: -111.904,
+			lat: 40.719,
+			zoom: 9,
+			fillOpacity: 0.6,
+			colorScale: ["#ffffD9", "#50BAC3", "#1A468A"],
+			h3Resolution: 8
+		};
+
+		// Utilities
+		function normalizeLayer(layer, baseAtZero = false) {
+			const hexagons = Object.keys(layer);
+			// Pass one, get max
+			const max = hexagons.reduce(
+				(max, hex) => Math.max(max, layer[hex]),
+				-Infinity
+			);
+			const min = baseAtZero
+				? hexagons.reduce((min, hex) => Math.min(min, layer[hex]), Infinity)
+				: 0;
+			// Pass two, normalize
+			hexagons.forEach((hex) => {
+				layer[hex] = (layer[hex] - min) / (max - min);
+			});
+			return layer;
+		}
+
+		function getSliderValue(id) {
+			const input = document.getElementById(id);
+			const value = parseFloat(input.value);
+			console.log(`${id}: ${value}`);
+
+			return value;
+		}
+
+		// Transform a kilometer measurement to a k-ring radius
+		function kmToRadius(km, resolution) {
+			return Math.floor(km / h3.edgeLength(resolution, h3.UNITS.km));
+		}
+
+		function bufferPointsLinear(geojson, radius, h3Resolution) {
+			const layer = {};
+			geojson.features.forEach((feature) => {
+				const [lng, lat] = feature.geometry.coordinates;
+				const stationIndex = h3.geoToH3(
+				lat,
+				lng,
+				h3Resolution
+				);
+				// add surrounding multiple surrounding rings, with less weight in each
+				const rings = h3.kRingDistances(stationIndex, radius);
+				const step = 1 / (radius + 1);
+				rings.forEach((ring, distance) => {
+				ring.forEach((h3Index) => {
+					layer[h3Index] = (layer[h3Index] || 0) + 1 - distance * step;
+				});
+				});
+		});
+
+		return normalizeLayer(layer);
+		}
+
+		function interpolateColor(value, stops, colors) {
+			const index = stops.findIndex((stop) => value <= stop);
+			if (index < 0) {
+				return colors[colors.length - 1];
+			}
+			if (index === 0) {
+				return colors[0];
+			}
+			const startColor = ol.color.asArray(colors[index - 1]);
+			const endColor = ol.color.asArray(colors[index]);
+			const startStop = stops[index - 1];
+			const endStop = stops[index];
+			const result = [0, 0, 0, 0]
+			for (let i = 0; i < 4; ++i) {
+				result[i] = startColor[i] + ((endColor[i] - startColor[i]) * (value - startStop) / (endStop - startStop))
+			}
+			return ol.color.asString(result);
+		}
+
+		let hospitals;
+		let childcare;
+		let grocery;
+		let libraries;
+		let highered;
+		let utarailstations;
+		let commcenters;
+
+		async function getRawData() {
+		hospitals = await d3.json(
+			"https://opendata.arcgis.com/datasets/39aba645ea9847668df557d1c8dbd666_0.geojson"
+		);
+		childcare = await d3.json(
+			"https://opendata.arcgis.com/datasets/64dd5af56d63483d8bb6841879bb9702_0.geojson"
+		);
+		grocery = await d3.json(
+			"https://opendata.arcgis.com/datasets/81b4eeea6c6c426aa9b165df6eb56870_0.geojson"
+		);
+		libraries = await d3.json(
+			"https://opendata.arcgis.com/datasets/f6cf0c8ef65344b6a6e5ebeaa108f549_0.geojson"
+		);
+		highered = await d3.json(
+			"https://opendata.arcgis.com/datasets/731644a217f445e5a638f9a84a7ada93_0.geojson"
+		);
+		utarailstations = await d3.json(
+			"https://opendata.arcgis.com/datasets/bb8f7bc8871b4a7594bcc037631073e7_0.geojson"
+		);
+		commcenters = await d3.json(
+			"https://opendata.arcgis.com/datasets/25dba734a2f34059bf58143834284d0f_0.geojson"
+		);
+		}
+
+		async function getData() {
+		console.log('getData');
+
+		const h3Resolution = config.h3Resolution;
+		// Data Layers
+		const hospitallayer = normalizeLayer(
+			bufferPointsLinear(hospitals, kmToRadius(1, h3Resolution), h3Resolution)
+		);
+		const childcarelayer = normalizeLayer(
+			bufferPointsLinear(childcare, kmToRadius(1, h3Resolution), h3Resolution)
+		);
+		const grocerylayer = normalizeLayer(
+			bufferPointsLinear(grocery, kmToRadius(1, h3Resolution), h3Resolution)
+		);
+		const librarylayer = normalizeLayer(
+			bufferPointsLinear(libraries, kmToRadius(1, h3Resolution), h3Resolution)
+		);
+		const higheredlayer = normalizeLayer(
+			bufferPointsLinear(highered, kmToRadius(1, h3Resolution), h3Resolution)
+		);
+		const utarailstationlayer = normalizeLayer(
+			bufferPointsLinear(utarailstations, kmToRadius(1, h3Resolution), h3Resolution)
+		);
+		const commcenterslayer = normalizeLayer(
+			bufferPointsLinear(commcenters, kmToRadius(1, h3Resolution), h3Resolution)
+		);
+		const localparkslayer = normalizeLayer(
+			bufferPointsLinear(commcenters, kmToRadius(1, h3Resolution), h3Resolution)
+		);
+
+
+		// Combining Layers
+		const mapLayers = [
+			{ hexagons: hospitallayer, weight: getSliderValue("hospitalWeight") },
+			{
+			hexagons: childcarelayer,
+			weight: getSliderValue("childcareWeight"),
+			},
+			{ hexagons: grocerylayer, weight: getSliderValue("groceryWeight") },
+			{ hexagons: librarylayer, weight: getSliderValue("libraryWeight") },
+			{ hexagons: higheredlayer, weight: getSliderValue("higheredWeight") },
+			{
+			hexagons: commcenterslayer,
+			weight: getSliderValue("commcentersWeight"),
+			},
+			{
+			hexagons: utarailstationlayer,
+			weight: getSliderValue("utarailstationlayerWeight"),
+			},
+			{
+			hexagons: localparkslayer,
+			weight: getSliderValue("localparksWeight"),
+			},
+		];
+
+		const combinedLayers = {};
+		mapLayers.forEach(({ hexagons, weight }) => {
+			Object.keys(hexagons).forEach((hex) => {
+			combinedLayers[hex] =
+				(combinedLayers[hex] || 0) + hexagons[hex] * weight;
+			});
+		});
+
+		return combinedLayers;
+		}
+
+		// Map Rendering
+		function init() {
+		console.log("init");
+
+		const outlineColor = 'rgba(0,0,0,0)';
+		const style = new ol.style.Style({
+			stroke: new ol.style.Stroke({
+			color: outlineColor,
+			width: 1,
+			}),
+			fill: new ol.style.Fill(),
+		});
+
+		const vectorLayer = new ol.layer.Vector({
+			"visible":false,
+			style: (feature) => {
+			const value = feature.get('value');
+			style.getFill().setColor(interpolateColor(value, [0, 0.5, 1], config.colorScale))
+			return style;
+			},
+			opacity: config.fillOpacity,
+		});
+
+		const map = new ol.Map({
+			target: document.getElementById("mapContainer"),
+			view: new ol.View({
+			center: ol.proj.fromLonLat([config.lng, config.lat]),
+			zoom: config.zoom + 1,
+			}),
+			layers: [
+			new ol.layer.Tile({
+				source: new ol.source.OSM(),
+			}),
+			vectorLayer,
+			]
+		});
+		map.once("rendercomplete", async () => {
+			console.log("map load");
+
+			await getRawData();
+
+			refreshMap(vectorLayer);
+
+			const inputs = document.getElementsByTagName("input");
+			for (let input of inputs) {
+			console.log('hello')
+			input.addEventListener("change", () => {
+				refreshMap(vectorLayer);
+				vectorLayer.setVisible(true); 
+			});
+			}
+		});
+		}
+
+		async function refreshMap(vectorLayer) {
+		console.log('refreshMap');
+
+		const combinedLayers = await getData();
+
+		renderHexes(vectorLayer, combinedLayers);
+		}
+
+		function renderHexes(vectorLayer, hexagons) {
+		console.log("renderHexes");
+
+		// Transform the current hexagon map into a GeoJSON object
+		const geojson = geojson2h3.h3SetToFeatureCollection(
+			Object.keys(hexagons),
+			(hex) => ({ value: hexagons[hex] })
+		);
+
+		const features = new ol.format.GeoJSON().readFeatures(geojson, {
+			featureProjection: 'EPSG:3857'
+		});
+
+		const vectorSource = new ol.source.Vector({ features: features });
+		vectorLayer.setSource(vectorSource);
+		}
+
+		init();
+	</script>
+
 
 	</body>
 
